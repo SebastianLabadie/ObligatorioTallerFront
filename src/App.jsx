@@ -1,7 +1,9 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Login from "./routes/Login";
+import Registro from "./routes/Registro";
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -12,30 +14,27 @@ function App() {
 				<div>
 					<ul>
 						<li>
-							<Link to="/">Home</Link>
+							<Link to="/">Iniciar Sesion</Link>
 						</li>
 						<li>
-							<Link to="/about">About</Link>
-						</li>
-						<li>
-							<Link to="/dashboard">Dashboard</Link>
+							<Link to="/registro">Registrarse</Link>
 						</li>
 					</ul>
 
 					<hr />
 
 					
-					{/* <Switch>
-						<Route exact path="/">
-							<Home />
-						</Route>
-						<Route path="/about">
+					
+					<Routes>
+						<Route exact path="/" element={<Login/>} />
+						<Route exact path="/registro" element={<Registro/>} />
+						{/* <Route path="/about">
 							<About />
 						</Route>
 						<Route path="/dashboard">
 							<Dashboard />
-						</Route>
-					</Switch> */}
+						</Route> */}
+					</Routes>
 				</div>
 			</Router>
 		</div>
