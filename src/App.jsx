@@ -4,30 +4,21 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./routes/Login";
 import Registro from "./routes/Registro";
+import Header from "./components/Header";
+import { Provider } from "react-redux";
+import {store} from './store/store'
+
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	return (
-		<div className="App">
-			<Router>
-				<div>
-					<ul>
-						<li>
-							<Link to="/">Iniciar Sesion</Link>
-						</li>
-						<li>
-							<Link to="/registro">Registrarse</Link>
-						</li>
-					</ul>
+		<Provider store={store}>
+			<div className="App">
+				<Router>
 
-					<hr />
-
-					
-					
+					<Header />
 					<Routes>
-						<Route exact path="/" element={<Login/>} />
-						<Route exact path="/registro" element={<Registro/>} />
+						<Route exact path="/" element={<Login />} />
+						<Route exact path="/registro" element={<Registro />} />
 						{/* <Route path="/about">
 							<About />
 						</Route>
@@ -35,9 +26,9 @@ function App() {
 							<Dashboard />
 						</Route> */}
 					</Routes>
-				</div>
-			</Router>
-		</div>
+				</Router>
+			</div>
+		</Provider>
 	);
 }
 

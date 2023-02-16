@@ -1,10 +1,11 @@
 import {configureStore} from "@reduxjs/toolkit";
 // import contadorReducer from "../features/contadorSlice";
-// import tareasReducer from "../features/tareasSlice";
+import usuarioSlice from "../features/usuarioSlice";
+import menuSlice from "../features/menuSlice";
 
-// export const store = configureStore({
-//     reducer:{
-//         contador:contadorReducer,
-//         tareas:tareasReducer
-//     }
-// });
+export const store = configureStore({
+    reducer:{
+        usuario:usuarioSlice,
+		menu:menuSlice
+    }
+});

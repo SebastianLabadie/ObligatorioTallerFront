@@ -1,22 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    cuenta: 0
+    isLoged: false
 }
 
-// export const contadorSlice = createSlice({
-//     name: "contador",
-//     initialState,
-//     reducers: {
-//         incrementar: state => {
-//             //immer
-//             state.cuenta++;
-//         },
-//         resetear: state => {
-//             state.cuenta = 0;
-//         }
-//     }
-// });
+export const usuarioSlice = createSlice({
+    name: "usuario",
+    initialState,
+    reducers: {
+        setLogin: (state,action) => {
+            //immer
+            state.isLoged = action.payload;
+        },
+    }
+});
 
-// export const { incrementar, resetear } = contadorSlice.actions;
-// export default contadorSlice.reducer;
+export const { setLogin } = usuarioSlice.actions;
+export default usuarioSlice.reducer;
