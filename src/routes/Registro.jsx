@@ -140,6 +140,7 @@ export default function Registro() {
 
 								<Select
 									defaultValue={Departamento}
+									placeholder="Seleccione Departamento"
 									onChange={(e)=>{setDepartamento(e.value)}}
 									options={Departamentos}
 								/>
