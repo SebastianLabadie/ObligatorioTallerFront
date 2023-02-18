@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { setMenuActivo } from "../features/menuSlice";
 import { URL_BASE } from "../utils/utils";
+import { setUserData,setLogin } from "../features/usuarioSlice";
 
 export default function Login() {
 	const dispatch = useDispatch()
@@ -30,7 +31,25 @@ export default function Login() {
 				password
 			}
 			const res = await axios.post(`${URL_BASE}login.php`,req)
-			console.log(`res login ${res}`)
+
+			console.log(`res login ${JSON.stringify(res)}`)
+
+			if (res.data.codigo === 200) {
+				//setear api key para futuras request
+				axios.defaults.headers.common['Authorization'] = res.data.apikey;
+
+				//guardar info de usuario en redux
+				dispatch(setUserData({...res.data}))
+
+				//marcar usuario como logueado
+				dispatch(setLogin(true))
+
+				//redireccionar a home
+				
+				console.log(`termine dispatchs login`)
+			}
+			
+			
 		} catch (error) {
 			console.log(`error login ${error}`)
 		}
