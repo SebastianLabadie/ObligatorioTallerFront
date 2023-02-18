@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { setMenuActivo } from "../features/menuSlice";
 import { URL_BASE } from "../utils/utils";
 import axios from "axios";
+import Select from 'react-select';
 
 export default function Registro() {
 	const dispatch = useDispatch();
@@ -43,13 +44,16 @@ export default function Registro() {
 			
 			const res = await axios.get(`${URL_BASE}departamentos.php`)
 			console.log(res.data);
-			 setDepartamentos(res.data.departamentos)
+			const depMapped = res.data.departamentos.map((item)=>{return {value:item.id,label:item.nombre}})
+			console.log(`dep ${JSON.stringify(depMapped)}`)
+			 setDepartamentos(depMapped)
 		} catch (error) {
 			
 		}
 	}
 
 	const getCiudades = async ()=>{
+		console.log(`getCiudades ${Departamento}`)
 		if (Departamento > 0){
 			console.log(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`)
 			try {
@@ -126,12 +130,11 @@ export default function Registro() {
 									Departamento
 								</label>
 
-								<select id="Departamento" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-									
-									{Departamentos.map( departamento => <option onChange={ ()=> setDepartamento(departamento.id)} value={departamento.id}> {departamento.nombre}</option> ) }
-									
-									
-								</select>
+								<Select
+									defaultValue={Departamento}
+									onChange={(e)=>{setDepartamento(e.value)}}
+									options={Departamentos}
+								/>
 
 							<div>
 
