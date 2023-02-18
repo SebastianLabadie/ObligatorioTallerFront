@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { setMenuActivo } from "../features/menuSlice";
 import { URL_BASE } from "../utils/utils";
 import { setUserData,setLogin } from "../features/usuarioSlice";
+import { toast } from "react-toastify";
 
 export default function Login() {
 	const dispatch = useDispatch()
@@ -37,6 +38,9 @@ export default function Login() {
 			if (res.data.codigo === 200) {
 				//setear api key para futuras request
 				axios.defaults.headers.common['Authorization'] = res.data.apikey;
+
+				//toast de logeado con exito
+				toast.success("Inicio de session exitoso.")
 
 				//guardar info de usuario en redux
 				dispatch(setUserData({...res.data}))

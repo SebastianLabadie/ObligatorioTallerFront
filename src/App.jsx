@@ -7,11 +7,14 @@ import Registro from "./routes/Registro";
 import Header from "./components/Header";
 import { Provider } from "react-redux";
 import {store} from './store/store'
-
+import 'react-toastify/dist/ReactToastify.min.css'
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 	return (
 		<Provider store={store}>
+			<ToastContainer />
+			
 			<div className="App">
 				<Router>
 
