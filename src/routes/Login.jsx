@@ -1,23 +1,39 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { setMenuActivo } from "../features/menuSlice";
+import { URL_BASE } from "../utils/utils";
 
 export default function Login() {
 	const dispatch = useDispatch()
+	const [usuario, setUsuario] = useState('')
+	const [password, setPassword] = useState('')
 
 
-	const handleChangeEmail = (e)=>{
+	const handleChangeUsuario = (e)=>{
 		console.log(e.target.value)
+		setUsuario(e.target.value)
 	}
 
 	const handleChangePassword = (e)=>{
 		console.log(e.target.value)
+		setPassword(e.target.value)
 	}
 
 
-	const handleClickLogin = ()=>{
-		console.log("Login")
+	const handleClickLogin = async ()=>{
+		try {
+			console.log("Login")
+			const req={
+				usuario,
+				password
+			}
+			const res = await axios.post(`${URL_BASE}login.php`,req)
+			console.log(`res login ${res}`)
+		} catch (error) {
+			console.log(`error login ${error}`)
+		}
 	}
 
 	useEffect(()=>{
@@ -90,8 +106,8 @@ export default function Login() {
 								<input
 									type="text"
 									className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-									placeholder="Email"
-									onChange={handleChangeEmail}
+									placeholder="Usuario"
+									onChange={handleChangeUsuario}
 								/>
 							</div>
 
