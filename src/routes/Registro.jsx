@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setMenuActivo } from "../features/menuSlice";
+import { URL_BASE } from "../utils/utils";
+import axios from "axios";
 
 export default function Registro() {
 	const dispatch = useDispatch();
 	const [Departamentos,setDepartamentos] = useState([]);
-	const [Departamento,setDepartamento] = useState("");
+	const [Departamento,setDepartamento] = useState(0);
 	
 	const [Ciudades,setCiudades] = useState([]);
 	const [Ciudad,setCiudad] = useState("");
@@ -36,9 +38,10 @@ export default function Registro() {
 	}, [Departamento]);
 
 	const getDepartamentos = async ()=>{
-		console.log('first')
+		console.log(`${URL_BASE}departamentos.php`)
 		try {
-			const res = await axios.post(`${URL_BASE}departamentos.php`)
+			
+			const res = await axios.get(`${URL_BASE}departamentos.php`)
 			console.log(res.data);
 			 setDepartamentos(res.data.departamentos)
 		} catch (error) {
@@ -47,13 +50,17 @@ export default function Registro() {
 	}
 
 	const getCiudades = async ()=>{
-		try {
-			const res = await axios.post(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`)
-			console.log(res.data);
-			setCiudades(res.data.ciudades)
-		} catch (error) {
-			
+		if (Departamento > 0){
+			console.log(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`)
+			try {
+				const res = await axios.get(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`)
+				console.log(res.data);
+				setCiudades(res.data.ciudades)
+			} catch (error) {
+				
+			}
 		}
+		
 	}
 
 	const RegistrarUsr = async ()=>{
