@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { setMenuActivo } from "../features/menuSlice";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setUserData,setLogin } from "../features/usuarioSlice";
 
 export default function Header() {
 	const dispatch = useDispatch();
-	const { menuActivo } = useSelector((state) => state.menu);
 	const { isLoged } = useSelector((state) => state.usuario);
-
+	const location = useLocation()
+	const navigate = useNavigate()
 	const handleToggle = () => {
 		const navContent = document.getElementById("nav-content");
 		navContent.classList.toggle("hidden");
@@ -18,7 +17,13 @@ export default function Header() {
 	const handleClickLogOut = () => {
 		dispatch(setLogin(false));
 		dispatch(setUserData({}));
+		navigate('/')
 	}
+
+
+	useEffect(()=>{
+		console.log(`locatiion `,location.pathname)
+	},[])
 
 	return (
 		<nav className="flex items-center justify-between flex-wrap bg-gray-800 p-6 relative w-full z-10 top-0">
@@ -51,7 +56,7 @@ export default function Header() {
 							<li className="mr-3">
 								<Link
 									className={
-										menuActivo == "LOGIN"
+										location.pathname == "/"
 											? "inline-block py-2 px-4 text-white no-underline"
 											: "inline-block py-2 px-4 text-gray-600 no-underline hover:text-gray-200 hover:text-underline"
 									}
@@ -63,7 +68,7 @@ export default function Header() {
 							<li className="mr-3">
 								<Link
 									className={
-										menuActivo == "REGISTRO"
+										location.pathname == "/registro"
 											? "inline-block py-2 px-4 text-white no-underline"
 											: "inline-block py-2 px-4 text-gray-600 no-underline hover:text-gray-200 hover:text-underline"
 									}
@@ -77,44 +82,48 @@ export default function Header() {
 						<>
 							{/* MENUES CUANDO ESTA LOGEADO */}
 							<li className="mr-3">
-								<a
-									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
-									href="#"
+								<Link
+									className={
+										location.pathname == "/AgregarGasto"
+											? "inline-block py-2 px-4 text-white no-underline"
+											: "inline-block py-2 px-4 text-gray-600 no-underline hover:text-gray-200 hover:text-underline"
+									}
+									to="/AgregarGasto"
 								>
 									Agregar Gasto
-								</a>
+								</Link>
 							</li>
 							<li className="mr-3">
-								<a
+								<Link
 									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
 									href="#"
 								>
 									Agregar Ingreso
-								</a>
+								</Link>
 							</li>
 							<li className="mr-3">
-								<a
+								<Link
 									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
 									href="#"
 								>
 									Listado de Movimientos
-								</a>
+								</Link>
 							</li>
 							<li className="mr-3">
-								<a
+								<Link
 									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
 									href="#"
 								>
 									Montos Totales
-								</a>
+								</Link>
 							</li>
 							<li className="mr-3">
-								<a
+								<Link
 									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
 									href="#"
 								>
 									Análisis
-								</a>
+								</Link>
 							</li>
 							<li className="mr-3 inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline hover:cursor-pointer py-2 px-4" onClick={handleClickLogOut}>
 									

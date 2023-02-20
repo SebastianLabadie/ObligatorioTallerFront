@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setMenuActivo } from "../features/menuSlice";
 import { URL_BASE } from "../utils/utils";
 import axios from "axios";
 import Select from 'react-select';
@@ -30,7 +29,6 @@ export default function Registro() {
 
 	useEffect(() => {
 		
-		dispatch(setMenuActivo("REGISTRO"));
 		getDepartamentos();
 	}, []);
 

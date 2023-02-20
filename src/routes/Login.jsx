@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { setMenuActivo } from "../features/menuSlice";
+import { Link, useNavigate } from "react-router-dom";
 import { URL_BASE } from "../utils/utils";
 import { setUserData,setLogin } from "../features/usuarioSlice";
 import { toast } from "react-toastify";
@@ -11,7 +10,7 @@ export default function Login() {
 	const dispatch = useDispatch()
 	const [usuario, setUsuario] = useState('')
 	const [password, setPassword] = useState('')
-
+	const navigate = useNavigate()
 
 	const handleChangeUsuario = (e)=>{
 		console.log(e.target.value)
@@ -35,9 +34,14 @@ export default function Login() {
 
 			console.log(`res login ${JSON.stringify(res)}`)
 
+
 			if (res.data.codigo === 200) {
 				//setear api key para futuras request
-				axios.defaults.headers.common['Authorization'] = res.data.apikey;
+				axios.defaults.headers.common['apiKey'] = ''+res.data.apiKey;
+
+				console.log(`axios.defaults.headers.common['apiKey'] ${axios.defaults.headers.common['apiKey']}`)
+
+				
 
 				//toast de logeado con exito
 				toast.success("Inicio de session exitoso.")
@@ -49,7 +53,8 @@ export default function Login() {
 				dispatch(setLogin(true))
 
 				//redireccionar a home
-				
+				navigate('/AgregarGasto')
+
 				console.log(`termine dispatchs login`)
 			}
 			
@@ -59,9 +64,6 @@ export default function Login() {
 		}
 	}
 
-	useEffect(()=>{
-		dispatch(setMenuActivo('LOGIN'))
-	},[])
 
 	return (
 		<section className="">

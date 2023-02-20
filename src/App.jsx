@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import {store} from './store/store'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
+import AgregarGasto from "./routes/AgregarGasto";
 
 function App() {
 	return (
@@ -22,12 +23,7 @@ function App() {
 					<Routes>
 						<Route exact path="/" element={<Login />} />
 						<Route exact path="/registro" element={<Registro />} />
-						{/* <Route path="/about">
-							<About />
-						</Route>
-						<Route path="/dashboard">
-							<Dashboard />
-						</Route> */}
+						<Route exact path="/AgregarGasto" element={<AgregarGasto />} />
 					</Routes>
 				</Router>
 			</div>
