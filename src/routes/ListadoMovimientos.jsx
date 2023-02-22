@@ -11,7 +11,7 @@ import Spinner from '../components/Spinner';
 
 export default function ListadoMovimientos() {
 
-const id  = useSelector((state) => state.usuario);
+const {userData}  = useSelector((state) => state.usuario);
 const [Movimientos,setMovimientos] = useState([]);
 const [TipoMovimiento,setTipoMovimiento] = useState("Todos");
 const [isReload,setReload] = useState(false);
@@ -36,7 +36,7 @@ const columns = [
   const [selectionModel, setSelectionModel] = React.useState([]);
   
   useEffect(() => {
-    console.log(id);
+    console.log(userData.id);
     getMovimientos();
     
 }, []);
@@ -63,8 +63,8 @@ const columns = [
     const getMovimientos = async ()=>{
         setLoading(true);
         try {
-            console.log(`${URL_BASE}movimientos.php?idUsuario=${id}`)
-            const res = await axios.get(`${URL_BASE}movimientos.php?idUsuario=${id}`)
+            console.log(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`)
+            const res = await axios.get(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`)
             console.log(res.data)
             const depMapped = res.data.movimientos.map((movimiento)=>{return {id:movimiento.id,concepto:movimiento.concepto,categoria:movimiento.categoria,medio:movimiento.medio,total:movimiento.total}})  
             

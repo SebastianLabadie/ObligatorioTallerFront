@@ -18,7 +18,7 @@ export default function AgregarIngreso() {
 	const [medio, setMedio] = useState(0);
 	const [total, setTotal] = useState(0);
 	const [fecha, setFecha] = useState("");
-	const { id } = useSelector((state) => state.usuario);
+	const { id } = useSelector((state) => state.usuario.userData);
 
 	const dispatch = useDispatch();
 
