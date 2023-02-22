@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
 import AgregarGasto from "./routes/AgregarGasto";
 import ListadoMovimientos from "./routes/ListadoMovimientos";
+import AgregarIngreso from "./routes/AgregarIngreso";
 
 function App() {
 	return (
@@ -25,6 +26,7 @@ function App() {
 						<Route exact path="/" element={<Login />} />
 						<Route exact path="/registro" element={<Registro />} />
 						<Route exact path="/AgregarGasto" element={<AgregarGasto />} />
+						<Route exact path="/AgregarIngreso" element={<AgregarIngreso />} />
 						<Route exact path="/ListadoMovimientos" element={<ListadoMovimientos/>} />
 					</Routes>
 				</Router>
