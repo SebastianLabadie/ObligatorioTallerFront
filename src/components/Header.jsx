@@ -127,8 +127,12 @@ export default function Header() {
 							</li>
 							<li className="mr-3">
 								<Link
-									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
-									href="#"
+									className={
+										location.pathname == "/Analisis"
+											? "inline-block py-2 px-4 text-white no-underline"
+											: "inline-block py-2 px-4 text-gray-600 no-underline hover:text-gray-200 hover:text-underline"
+									}
+									to="/Analisis"
 								>
 									Análisis
 								</Link>

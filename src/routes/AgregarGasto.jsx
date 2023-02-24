@@ -33,7 +33,8 @@ export default function AgregarGasto() {
 		try {
 			const res = await axios.get(`${URL_BASE}rubros.php`);
 			console.log(res.data);
-			const rubMapped = res.data.rubros.map((item) => {
+			const rubrosFiltered = res.data.rubros.filter((item) => item.tipo === "gasto");
+			const rubMapped = rubrosFiltered.map((item) => {
 				return { value: item.id, label: item.nombre };
 			});
 			console.log(`dep ${JSON.stringify(rubMapped)}`);
