@@ -50,10 +50,7 @@ export default function AgregarGasto() {
 		
 		const validacion = validarCampos()
 		if (validacion) {
-			let totalAux = total;
-			if (totalAux > 0) {
-				totalAux = totalAux * -1;
-			}
+			
 
 			try {
 				const res = await axios.post(`${URL_BASE}movimientos.php`, {
@@ -61,7 +58,7 @@ export default function AgregarGasto() {
 					concepto,
 					categoria:rubro,
 					medio,
-					total:totalAux,
+					total,
 					fecha,
 				});
 

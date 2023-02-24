@@ -19,31 +19,23 @@ const arrayColores = [
 	"rgba(255, 159, 64, 0.2)",
 ];
 
-export const data = {
-	labels: ["Alimentacion", "Conbustible", "Educacion"],
-	datasets: [
-		{
-			label: "Monto",
-			data: [12, 19, 3],
-			backgroundColor: arrayColores,
-			borderColor: arrayColores,
-			borderWidth: 1,
-		},
-	],
-};
-
 export default function Analisis() {
 	const { userData } = useSelector((state) => state.usuario);
 	const [loading, setLoading] = useState(true);
 	const [dataIngresoRubros, setDataIngresoRubros] = useState({});
-	const [totalIngresos, setTotalIngresos] = useState(0)
+	const [totalIngresos, setTotalIngresos] = useState(0);
+	const [dataGastosRubros, setDataGastosRubros] = useState({});
+	const [totalGastos, setTotalGastos] = useState(0);
 	const [rubros, setRubros] = useState([]);
 
 	useEffect(() => {
 		console.log(userData.id);
 		getRubros();
-		getMovimientos();
 	}, []);
+
+	useEffect(() => {
+		getMovimientos();
+	},[rubros])
 
 	const getRubros = async () => {
 		console.log(`axios ${axios.defaults.headers.common["apiKey"]}`);
@@ -69,36 +61,10 @@ export default function Analisis() {
 			console.log(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`);
 			const res = await axios.get(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`);
 			console.log(res.data);
+			await calcularChartIngresoRubros(res)
+			await calcularChartGastosRubros(res)
 
-			const rubrosIngreso = rubros.filter((item) => item.tipo === "ingreso");
-			const rubrosIngresoLabel = rubrosIngreso.map((item) => item.nombre);
-			console.log(`rubrosIngreso `, rubrosIngreso)
-
-			let movimientosIngresoRubros = [];
-			let totalIngresos = 0;
-			rubrosIngreso.forEach((rubro) => {
-				const movimientosDeRubro= res.data.movimientos.filter((movimiento) => movimiento.categoria === rubro.id)
-				const totalMovimientosDeRubro = movimientosDeRubro.reduce((acumulador, movimiento) => acumulador + movimiento.total , 0)
-				totalIngresos += totalMovimientosDeRubro;
-				movimientosIngresoRubros.push(
-					totalMovimientosDeRubro
-				);
-			})
-			console.log(`movimientosIngresoRubros `, movimientosIngresoRubros);
-
-			setDataIngresoRubros({
-				labels: rubrosIngresoLabel,
-				datasets: [
-					{
-						label: "Monto",
-						data: movimientosIngresoRubros,
-						backgroundColor: arrayColores,
-						borderColor: arrayColores,
-						borderWidth: 1,
-					},
-				],
-			});
-			setTotalIngresos(totalIngresos)
+			
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -106,18 +72,97 @@ export default function Analisis() {
 		}
 	};
 
+	const calcularChartIngresoRubros = async (res) => {
+		console.log(`rubros `, rubros)
+		const rubrosIngreso = rubros.filter((item) => item.tipo === "ingreso");
+		const rubrosIngresoLabel = rubrosIngreso.map((item) => item.nombre);
+		console.log(`rubrosIngreso `, rubrosIngreso);
+
+		let movimientosIngresoRubros = [];
+		let totalIngresos = 0;
+		rubrosIngreso.forEach((rubro) => {
+			const movimientosDeRubro = res.data.movimientos.filter((movimiento) => movimiento.categoria === rubro.id);
+			const totalMovimientosDeRubro = movimientosDeRubro.reduce(
+				(acumulador, movimiento) => acumulador + movimiento.total,
+				0
+			);
+			totalIngresos += totalMovimientosDeRubro;
+			movimientosIngresoRubros.push(totalMovimientosDeRubro);
+		});
+		console.log(`movimientosIngresoRubros `, movimientosIngresoRubros);
+
+		setDataIngresoRubros({
+			labels: rubrosIngresoLabel,
+			datasets: [
+				{
+					label: "Monto",
+					data: movimientosIngresoRubros,
+					backgroundColor: arrayColores,
+					borderColor: arrayColores,
+					borderWidth: 1,
+				},
+			],
+		});
+
+		setTotalIngresos(totalIngresos);
+	};
+
+	const calcularChartGastosRubros = async (res) => {
+		console.log(`rubros `, rubros)
+		const rubrosGastos = rubros.filter((item) => item.tipo === "gasto");
+		const rubrosGastosLabel = rubrosGastos.map((item) => item.nombre);
+		console.log(`rubrosGastos `, rubrosGastos);
+
+		let movimientosGastosRubros = [];
+		let totalGastos = 0;
+		rubrosGastos.forEach((rubro) => {
+			const movimientosDeRubro = res.data.movimientos.filter((movimiento) => movimiento.categoria === rubro.id);
+			const totalMovimientosDeRubro = movimientosDeRubro.reduce(
+				(acumulador, movimiento) => acumulador + movimiento.total,
+				0
+			);
+			totalGastos += totalMovimientosDeRubro;
+			movimientosGastosRubros.push(totalMovimientosDeRubro);
+		});
+		console.log(`movimientosGastosRubros `, movimientosGastosRubros);
+
+		setDataGastosRubros({
+			labels: rubrosGastosLabel,
+			datasets: [
+				{
+					label: "Monto",
+					data: movimientosGastosRubros,
+					backgroundColor: arrayColores,
+					borderColor: arrayColores,
+					borderWidth: 1,
+				},
+			],
+		});
+
+		setTotalGastos(totalGastos);
+	};
+
 	return (
-		<div>
+		<div className="bg-slate-100  h-screen">
 			{loading && <Spinner />}
 			{!loading && (
-				<div>
-					<Card01
-						title={"Ingresos por rubro"}
-						description={`Grafico del total de ingresos(monto) agrupados por rubro.`}
-					>
-						<Pie data={dataIngresoRubros} />
-						<strong>Total: ${totalIngresos}</strong>
-					</Card01>
+				<div className="p-5">
+					<div className="flex justify-center items-center">
+						<Card01
+							title={"Ingresos por rubro"}
+							description={`Grafico del total de ingresos(monto) agrupados por rubro.`}
+						>
+							<Pie data={dataIngresoRubros} />
+							<strong>Total: ${totalIngresos}</strong>
+						</Card01>
+						<Card01
+							title={"Gastos por rubro"}
+							description={`Grafico del total de gastos(monto) agrupados por rubro.`}
+						>
+							<Pie data={dataGastosRubros} />
+							<strong>Total: ${totalGastos}</strong>
+						</Card01>
+					</div>
 				</div>
 			)}
 		</div>
