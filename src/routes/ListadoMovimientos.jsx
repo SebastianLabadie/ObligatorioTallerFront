@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import { toast } from "react-toastify";
 import Spinner from '../components/Spinner';
 import { Link, useNavigate } from "react-router-dom";
+import { setLogin, setUserData } from '../features/usuarioSlice';
 
 export default function ListadoMovimientos() {
 
@@ -20,6 +21,7 @@ const [loading, setLoading] = useState(true);
 const [rubros, setRubros] = useState([]);
 
 const nav = useNavigate()
+const dispatch = useDispatch();
 
 const TiposMovimiento = [
     {value: 'Todos',label: 'Todos'},
@@ -64,6 +66,7 @@ const columns = [
             setRubros(res.data.rubros);
 		} catch (error) {
 			toast.error(error.message);
+			validarSesion(error)
 		}
         finally{
             setLoading(true);
@@ -96,10 +99,7 @@ const columns = [
             setMovimientos(depMapped)
         } catch (error) {
             
-            if (error.response.status == 401){
-                nav("/")
-                
-            }
+			validarSesion(error)
         }
 		finally{
             setLoading(false);
@@ -144,9 +144,18 @@ const columns = [
             
         } catch (error) {
             toast.error(error.response.data.mensaje)
+			validarSesion(error)
         }
 
     }
+
+	const validarSesion = (error) => {
+		if (error.response.status == 401){
+			dispatch(setLogin(false));
+			dispatch(setUserData({}));
+			nav("/")
+		}
+	}
 
   return (
 
