@@ -76,7 +76,7 @@ export default function Analisis() {
 		console.log(`rubros `, rubros)
 		const rubrosIngreso = rubros.filter((item) => item.tipo === "ingreso");
 		const rubrosIngresoLabel = rubrosIngreso.map((item) => item.nombre);
-		console.log(`rubrosIngreso `, rubrosIngreso);
+		
 
 		let movimientosIngresoRubros = [];
 		let totalIngresos = 0;
@@ -89,7 +89,7 @@ export default function Analisis() {
 			totalIngresos += totalMovimientosDeRubro;
 			movimientosIngresoRubros.push(totalMovimientosDeRubro);
 		});
-		console.log(`movimientosIngresoRubros `, movimientosIngresoRubros);
+		
 
 		setDataIngresoRubros({
 			labels: rubrosIngresoLabel,
@@ -111,7 +111,7 @@ export default function Analisis() {
 		console.log(`rubros `, rubros)
 		const rubrosGastos = rubros.filter((item) => item.tipo === "gasto");
 		const rubrosGastosLabel = rubrosGastos.map((item) => item.nombre);
-		console.log(`rubrosGastos `, rubrosGastos);
+		
 
 		let movimientosGastosRubros = [];
 		let totalGastos = 0;
@@ -124,7 +124,7 @@ export default function Analisis() {
 			totalGastos += totalMovimientosDeRubro;
 			movimientosGastosRubros.push(totalMovimientosDeRubro);
 		});
-		console.log(`movimientosGastosRubros `, movimientosGastosRubros);
+		
 
 		setDataGastosRubros({
 			labels: rubrosGastosLabel,

@@ -120,7 +120,7 @@ export default function Header() {
 							<li className="mr-3">
 								<Link
 									className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4"
-									href="#"
+									to="/MontosTotales"
 								>
 									Montos Totales
 								</Link>

@@ -13,6 +13,7 @@ import AgregarGasto from "./routes/AgregarGasto";
 import ListadoMovimientos from "./routes/ListadoMovimientos";
 import AgregarIngreso from "./routes/AgregarIngreso";
 import Analisis from "./routes/Analisis";
+import MontosTotales from "./routes/MontosTotales";
 
 function App() {
 	return (
@@ -29,6 +30,7 @@ function App() {
 						<Route exact path="/AgregarGasto" element={<AgregarGasto />} />
 						<Route exact path="/AgregarIngreso" element={<AgregarIngreso />} />
 						<Route exact path="/ListadoMovimientos" element={<ListadoMovimientos/>} />
+						<Route exact path="/MontosTotales" element={<MontosTotales/>} />
 						<Route exact path="/Analisis" element={<Analisis/>} />
 					</Routes>
 				</Router>

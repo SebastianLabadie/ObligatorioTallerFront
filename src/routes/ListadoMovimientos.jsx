@@ -8,6 +8,7 @@ import Select from 'react-select';
 import Box from '@mui/material/Box';
 import { toast } from "react-toastify";
 import Spinner from '../components/Spinner';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ListadoMovimientos() {
 
@@ -16,13 +17,14 @@ const [Movimientos,setMovimientos] = useState([]);
 const [TipoMovimiento,setTipoMovimiento] = useState("Todos");
 const [isReload,setReload] = useState(false);
 const [loading, setLoading] = useState(true);
+const [rubros, setRubros] = useState([]);
 
-
+const nav = useNavigate()
 
 const TiposMovimiento = [
     {value: 'Todos',label: 'Todos'},
-	{ value: "Gasto", label: "Gasto" },
-	{ value: "Ingreso", label: "Ingreso" }
+	{ value: "gasto", label: "Gasto" },
+	{ value: "ingreso", label: "Ingreso" }
 ];
 
 const columns = [
@@ -36,7 +38,7 @@ const columns = [
   const [selectionModel, setSelectionModel] = React.useState([]);
   
   useEffect(() => {
-    console.log(userData.id);
+    getRubros();
     getMovimientos();
     
 }, []);
@@ -50,46 +52,80 @@ const columns = [
     
 
     useEffect(() => {
-		console.log(selectionModel)
-		
-	}, [selectionModel]);
-
-
-    useEffect(() => {
 		getMovimientos()
 		
 	}, [TipoMovimiento]);
 
+    const getRubros = async () => {
+		setLoading(false);
+		try {
+			const res = await axios.get(`${URL_BASE}rubros.php`);
+			
+            setRubros(res.data.rubros);
+		} catch (error) {
+			toast.error(error.message);
+		}
+        finally{
+            setLoading(true);
+        }
+	};
+
+
+
     const getMovimientos = async ()=>{
         setLoading(true);
         try {
-            console.log(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`)
+            
             const res = await axios.get(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`)
-            console.log(res.data)
+            
             const depMapped = res.data.movimientos.map((movimiento)=>{return {id:movimiento.id,concepto:movimiento.concepto,categoria:movimiento.categoria,medio:movimiento.medio,total:movimiento.total}})  
             
-            if(TipoMovimiento =='Gasto'){
-                const movFilter = depMapped.filter(dp => dp.total < 0)
-                setMovimientos(movFilter)
+            if(TipoMovimiento =='gasto'){
+                await FiltrarMovimientosPorTipo(depMapped,TipoMovimiento)
+                
                 return
             }
             
-            if(TipoMovimiento =='Ingreso'){
-                const movFilter = depMapped.filter(dp => dp.total > 0)
-                setMovimientos(movFilter)
+            if(TipoMovimiento =='ingreso'){
+                await FiltrarMovimientosPorTipo(depMapped,TipoMovimiento)
+                
                 return
             }
             
 
             setMovimientos(depMapped)
         } catch (error) {
-            console.log(error)
+            
+            if (error.response.status == 401){
+                nav("/")
+                
+            }
         }
 		finally{
             setLoading(false);
         }
 		
 	}
+
+    const FiltrarMovimientosPorTipo = async (depMapped,tipo) => {
+		console.log(rubros)
+        const rubrosGastos = rubros.filter((item) => item.tipo === tipo);
+		
+        const MovientosFiltered = [];
+		rubrosGastos.forEach((rubro) => {
+			const movimientosDeRubro = depMapped.filter((movimiento) => movimiento.categoria === rubro.id);
+            if (movimientosDeRubro.length > 0){
+                movimientosDeRubro.map((movimiento)=>MovientosFiltered.push(movimiento)) 
+            }
+           
+			
+		});
+      
+        setMovimientos(MovientosFiltered);
+
+    }
+    
+
 
 
     const EliminarMovimiento = async()=>{
@@ -98,7 +134,7 @@ const columns = [
             
             
             const res = await axios.delete(`${URL_BASE}movimientos.php?`,{data:{idMovimiento:selectionModel[0]}})
-            console.log(res.data)
+            
             if (res.data.codigo === 200) {
 				
 				
