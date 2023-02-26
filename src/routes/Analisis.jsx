@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { URL_BASE } from "../utils/utils";
 import axios from "axios";
+import Comparativo from "./Comparativo";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
@@ -238,7 +239,9 @@ export default function Analisis() {
 			{loading && <Spinner />}
 			{!loading && (
 				<div className="p-5">
+					
 					<div className="flex justify-center items-center">
+					
 						<Card01
 							title={"Ingresos por rubro"}
 							description={`Grafico del total de ingresos(monto) agrupados por rubro.`}
@@ -259,7 +262,14 @@ export default function Analisis() {
 						<Card01 title={"Gastos evolutivos"} description={`Grafico de gastos por mes para el usuario para el año en curso y el anterior.`}  maxWidth="max-w-800">
 								<Bar options={options} data={dataGastosEvolucion} />
 						</Card01>
+						<Card01
+								title={"2 Ultimos Gastos por Rubro"}
+								description={`Comparativo ultimos 2 gastos por Rubro.`}
+							>
+							<Comparativo/>
+						</Card01>
 					</div>
+					
 				</div>
 			)}
 		</div>

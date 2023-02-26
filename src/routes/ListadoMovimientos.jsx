@@ -57,7 +57,7 @@ const columns = [
 	}, [TipoMovimiento]);
 
     const getRubros = async () => {
-		setLoading(false);
+		setLoading(true);
 		try {
 			const res = await axios.get(`${URL_BASE}rubros.php`);
 			
@@ -66,7 +66,7 @@ const columns = [
 			toast.error(error.message);
 		}
         finally{
-            setLoading(true);
+            setLoading(false);
         }
 	};
 
