@@ -6,3 +6,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.max-w-800 {
+  max-width: 800px;
+}
+
+.w-800{
+	  width: 800px;
+}
