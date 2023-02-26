@@ -11,6 +11,7 @@ export default function Login() {
 	const [usuario, setUsuario] = useState('')
 	const [password, setPassword] = useState('')
 	const navigate = useNavigate()
+	
 
 	const handleChangeUsuario = (e)=>{
 		console.log(e.target.value)
@@ -24,44 +25,65 @@ export default function Login() {
 
 
 	const handleClickLogin = async ()=>{
-		try {
-			console.log("Login")
-			const req={
-				usuario,
-				password
-			}
-			const res = await axios.post(`${URL_BASE}login.php`,req)
+		const camposValidos = validarCampos()
 
-			console.log(`res login ${JSON.stringify(res)}`)
+		if (camposValidos) {
 
-
-			if (res.data.codigo === 200) {
-				//setear api key para futuras request
-				axios.defaults.headers.common['apiKey'] = ''+res.data.apiKey;
-
-				console.log(`axios.defaults.headers.common['apiKey'] ${axios.defaults.headers.common['apiKey']}`)
-
+			try {
+				console.log("Login")
+				const req={
+					usuario,
+					password
+				}
+				const res = await axios.post(`${URL_BASE}login.php`,req)
+	
+				console.log(`res login ${JSON.stringify(res)}`)
+	
+	
+				if (res.data.codigo === 200) {
+					//setear api key para futuras request
+					axios.defaults.headers.common['apiKey'] = ''+res.data.apiKey;
+	
+					console.log(`axios.defaults.headers.common['apiKey'] ${axios.defaults.headers.common['apiKey']}`)
+	
+					
+	
+					//toast de logeado con exito
+					toast.success("Inicio de session exitoso.")
+	
+					//guardar info de usuario en redux
+					dispatch(setUserData({...res.data}))
+	
+					//marcar usuario como logueado
+					dispatch(setLogin(true))
+	
+					//redireccionar a home
+					navigate('/AgregarGasto')
+	
+					console.log(`termine dispatchs login`)
+				}
 				
-
-				//toast de logeado con exito
-				toast.success("Inicio de session exitoso.")
-
-				//guardar info de usuario en redux
-				dispatch(setUserData({...res.data}))
-
-				//marcar usuario como logueado
-				dispatch(setLogin(true))
-
-				//redireccionar a home
-				navigate('/AgregarGasto')
-
-				console.log(`termine dispatchs login`)
+				
+			} catch (error) {
+				if (error.response.data.mensaje) {
+					toast.error(error.response.data.mensaje)
+				}else{
+					toast.error(error.message)
+				}
 			}
-			
-			
-		} catch (error) {
-			console.log(`error login ${error}`)
 		}
+	}
+
+	const validarCampos = ()=>{
+		if (!usuario) {
+			toast.error("El campo usuario no puede estar vacio.")
+			return false
+		}
+		if (!password) {
+			toast.error("El campo password no puede estar vacio.")
+			return false
+		}
+		return true
 	}
 
 
