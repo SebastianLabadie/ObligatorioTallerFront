@@ -65,7 +65,7 @@ export default function Analisis() {
 	const [dataGastosEvolucion, setDataGastosEvolucion] = useState({});
 
 	useEffect(() => {
-		console.log(userData.id);
+		
 		getRubros();
 	}, []);
 
@@ -74,17 +74,12 @@ export default function Analisis() {
 	}, [rubros]);
 
 	const getRubros = async () => {
-		console.log(`axios ${axios.defaults.headers.common["apiKey"]}`);
-		console.log(`${URL_BASE}rubros.php`);
+		
 		try {
 			const res = await axios.get(`${URL_BASE}rubros.php`);
-			console.log(res.data);
+			
 			const rubrosFiltered = res.data.rubros.filter((item) => item.tipo === "ingreso");
 
-			// const rubMapped = rubrosFiltered.map((item) => {
-			// 	return { value: item.id, label: item.nombre };
-			// });
-			// console.log(`dep ${JSON.stringify(rubMapped)}`);
 			setRubros(res.data.rubros);
 		} catch (error) {
 			toast.error(error.message);
@@ -94,21 +89,20 @@ export default function Analisis() {
 	const getMovimientos = async () => {
 		setLoading(true);
 		try {
-			console.log(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`);
+			
 			const res = await axios.get(`${URL_BASE}movimientos.php?idUsuario=${userData.id}`);
-			console.log(res.data);
 			await calcularChartIngresoRubros(res);
 			await calcularChartGastosRubros(res);
 			calcularChartGastosEvolicion(res);
 		} catch (error) {
-			console.log(error);
+			
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	const calcularChartIngresoRubros = async (res) => {
-		console.log(`rubros `, rubros);
+		
 		const rubrosIngreso = rubros.filter((item) => item.tipo === "ingreso");
 		const rubrosIngresoLabel = rubrosIngreso.map((item) => item.nombre);
 
@@ -141,7 +135,7 @@ export default function Analisis() {
 	};
 
 	const calcularChartGastosRubros = async (res) => {
-		console.log(`rubros `, rubros);
+		
 		const rubrosGastos = rubros.filter((item) => item.tipo === "gasto");
 		const rubrosGastosLabel = rubrosGastos.map((item) => item.nombre);
 
@@ -176,12 +170,11 @@ export default function Analisis() {
 	const calcularChartGastosEvolicion = (res) => {
 		const rubrosGastos = rubros.filter((item) => item.tipo === "gasto").map((item) => item.id);
 
-		console.log(`rubrosGastos `, rubrosGastos);
+		
 
 		const movimientosGastos = res.data.movimientos.filter((movimiento) => rubrosGastos.includes(movimiento.categoria));
 
-		console.log(`movimientosGastos `, movimientosGastos);
-
+		
 		const date = new Date();
 		const anioActual = date.getFullYear();
 		const anioPasado = anioActual - 1;
@@ -190,7 +183,6 @@ export default function Analisis() {
 		arrayMeses.forEach((mes, index) => {
 			const movimientosDeMes = movimientosGastos.filter((movimiento) => {
 				const fecha = new Date(movimiento.fecha);
-				//console.log(`month ${fecha.getMonth()} mes.value ${mes.value} year ${fecha.getFullYear()} anioActual ${anioActual}  `)
 				return fecha.getMonth() + 1 == mes.value && fecha.getFullYear() == anioActual;
 			});
 			const totalMovimientosDeMes = movimientosDeMes.reduce((acumulador, movimiento) => acumulador + movimiento.total, 0);
@@ -202,16 +194,13 @@ export default function Analisis() {
 		arrayMeses.forEach((mes, index) => {
 			const movimientosDeMes = movimientosGastos.filter((movimiento) => {
 				const fecha = new Date(movimiento.fecha);
-				//console.log(`month ${fecha.getMonth()} mes.value ${mes.value} year ${fecha.getFullYear()} anioActual ${anioActual}  `)
 				return fecha.getMonth() + 1 == mes.value && fecha.getFullYear() == anioPasado;
 			});
 			const totalMovimientosDeMes = movimientosDeMes.reduce((acumulador, movimiento) => acumulador + movimiento.total, 0);
 			movimientosGastosPorMesAPasado.push(totalMovimientosDeMes);
 		});
 
-		console.log(`movimientosGastosPorMesAActual ${movimientosGastosPorMesAActual}`);
-		console.log(`movimientosGastosPorMesAPasado ${movimientosGastosPorMesAPasado}`);
-
+		
 		const labels = arrayMeses.map((item) => item.label);
 
 		setDataGastosEvolucion({

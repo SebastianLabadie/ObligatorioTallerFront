@@ -30,16 +30,14 @@ export default function AgregarGasto() {
 	}, []);
 
 	const getRubros = async () => {
-		console.log(`axios ${axios.defaults.headers.common["apiKey"]}`);
-		console.log(`${URL_BASE}rubros.php`);
+		
 		try {
 			const res = await axios.get(`${URL_BASE}rubros.php`);
-			console.log(res.data);
+			
 			const rubrosFiltered = res.data.rubros.filter((item) => item.tipo === "gasto");
 			const rubMapped = rubrosFiltered.map((item) => {
 				return { value: item.id, label: item.nombre };
 			});
-			console.log(`dep ${JSON.stringify(rubMapped)}`);
 			setRubros(rubMapped);
 		} catch (error) {
 			
@@ -49,8 +47,7 @@ export default function AgregarGasto() {
 	};
 
 	const handleConfirmarGasto = async () => {
-		console.log(`axios ${axios.defaults.headers.common["apiKey"]}`);
-		console.log(`${URL_BASE}movimientos.php`);
+		
 		
 		const validacion = validarCampos()
 		if (validacion) {
@@ -67,7 +64,7 @@ export default function AgregarGasto() {
 				});
 
 				axios.delete()
-				console.log(res.data);
+				
 				if (res.data.codigo === 200) {
 					toast.success(`Gasto agregado correctamente. #${res.data.idMovimiento}`);
 				} else {

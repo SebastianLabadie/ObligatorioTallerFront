@@ -14,12 +14,10 @@ export default function Login() {
 	
 
 	const handleChangeUsuario = (e)=>{
-		console.log(e.target.value)
 		setUsuario(e.target.value)
 	}
 
 	const handleChangePassword = (e)=>{
-		console.log(e.target.value)
 		setPassword(e.target.value)
 	}
 
@@ -30,21 +28,17 @@ export default function Login() {
 		if (camposValidos) {
 
 			try {
-				console.log("Login")
 				const req={
 					usuario,
 					password
 				}
 				const res = await axios.post(`${URL_BASE}login.php`,req)
-	
-				console.log(`res login ${JSON.stringify(res)}`)
-	
-	
+
 				if (res.data.codigo === 200) {
 					//setear api key para futuras request
 					axios.defaults.headers.common['apiKey'] = ''+res.data.apiKey;
 	
-					console.log(`axios.defaults.headers.common['apiKey'] ${axios.defaults.headers.common['apiKey']}`)
+					
 	
 					
 	
@@ -60,7 +54,7 @@ export default function Login() {
 					//redireccionar a home
 					navigate('/AgregarGasto')
 	
-					console.log(`termine dispatchs login`)
+					
 				}
 				
 				

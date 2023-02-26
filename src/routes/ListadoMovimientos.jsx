@@ -108,8 +108,7 @@ const columns = [
 	}
 
     const FiltrarMovimientosPorTipo = async (depMapped,tipo) => {
-		console.log(rubros)
-        const rubrosGastos = rubros.filter((item) => item.tipo === tipo);
+		const rubrosGastos = rubros.filter((item) => item.tipo === tipo);
 		
         const MovientosFiltered = [];
 		rubrosGastos.forEach((rubro) => {

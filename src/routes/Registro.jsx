@@ -4,10 +4,12 @@ import { URL_BASE } from "../utils/utils";
 import axios from "axios";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { setLogin, setUserData } from "../features/usuarioSlice";
 
 export default function Registro() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [Departamentos, setDepartamentos] = useState([]);
 	const [Departamento, setDepartamento] = useState(0);
 
@@ -18,12 +20,11 @@ export default function Registro() {
 	const [password, setPassword] = useState("");
 
 	const handleChangeUsuario = (e) => {
-		console.log(e.target.value);
+		
 		setUsuario(e.target.value);
 	};
 
 	const handleChangePassword = (e) => {
-		console.log(e.target.value);
 		setPassword(e.target.value);
 	};
 
@@ -36,26 +37,20 @@ export default function Registro() {
 	}, [Departamento]);
 
 	const getDepartamentos = async () => {
-		console.log(`${URL_BASE}departamentos.php`);
 		try {
 			const res = await axios.get(`${URL_BASE}departamentos.php`);
-			console.log(res.data);
 			const depMapped = res.data.departamentos.map((item) => {
 				return { value: item.id, label: item.nombre };
 			});
-			console.log(`dep ${JSON.stringify(depMapped)}`);
 			setDepartamentos(depMapped);
 		} catch (error) {}
 	};
 
 	const getCiudades = async () => {
-		console.log(`getCiudades ${Departamento}`);
 		
 		if (Departamento > 0) {
-			console.log(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`);
 			try {
 				const res = await axios.get(`${URL_BASE}ciudades.php?idDepartamento=${Departamento}`);
-				console.log(res.data);
 				const ciuMapped = res.data.ciudades.map((item) => {
 					return { value: item.id, label: item.nombre };
 				});
@@ -77,18 +72,15 @@ export default function Registro() {
 					idDepartamento: Departamento,
 					idCiudades: Ciudad,
 				};
-				console.log(`req`, req);
-				// const res = await axios.post(`${URL_BASE}usuarios.php`, req);
-				// console.log(res.data);
-				// if (res.data.codigo === 200) {
-				// 	toast.success("Usuario Registrado con exito");
-				// 	setUsuario("");
-				// 	setPassword("");
-				// 	setCiudad(0);
-				// 	setDepartamento(0);
-				// } else {
-				// 	toast.error(res.data.mensaje);
-				// }
+				const res = await axios.post(`${URL_BASE}usuarios.php`, req);
+				if (res.data.codigo === 200) {
+					toast.success("Usuario Registrado con exito");
+					window.localStorage.setItem("user",usuario)
+					window.localStorage.setItem("password",password)
+					handleClickLogin();
+				} else {
+					toast.error(res.data.mensaje);
+				}
 			} catch (error) {
 				if (error.response.data.mensaje) {
 					toast.error(error.response.data.mensaje);
@@ -98,6 +90,8 @@ export default function Registro() {
 			}
 		}
 	};
+
+
 
 	const validarCampos = () => {
 		if (!usuario) {
@@ -118,6 +112,43 @@ export default function Registro() {
 		}
 		return true;
 	};
+
+	const handleClickLogin = async ()=>{
+		
+			try {
+				
+				const req={
+					usuario:window.localStorage.getItem("user"),
+					password:window.localStorage.getItem("password")
+				}
+				const res = await axios.post(`${URL_BASE}login.php`,req)
+	
+	
+				if (res.data.codigo === 200) {
+					//setear api key para futuras request
+					axios.defaults.headers.common['apiKey'] = ''+res.data.apiKey;
+				
+					//guardar info de usuario en redux
+					dispatch(setUserData({...res.data}))
+	
+					//marcar usuario como logueado
+					dispatch(setLogin(true))
+	
+					//redireccionar a home
+					navigate('/AgregarGasto')
+	
+				}
+				
+				
+			} catch (error) {
+				if (error.response.data.mensaje) {
+					toast.error(error.response.data.mensaje)
+				}else{
+					toast.error(error.message)
+				}
+			}
+		}
+	
 
 	return (
 		<section className="bg-gray-50 dark:bg-gray-900">
