@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { URL_BASE } from "../utils/utils";
+import { setLogin, setUserData } from "../features/usuarioSlice";
 
 const medios = [
 	{ value: "Efectivo", label: "Efectivo" },
@@ -22,6 +23,7 @@ export default function AgregarGasto() {
 	const { id } = useSelector((state) => state.usuario.userData);
 
 	const dispatch = useDispatch();
+	const nav = useNavigate()
 
 	useEffect(() => {
 		getRubros();
@@ -40,7 +42,9 @@ export default function AgregarGasto() {
 			console.log(`dep ${JSON.stringify(rubMapped)}`);
 			setRubros(rubMapped);
 		} catch (error) {
+			
 			toast.error(error.message);
+			validarSesion(error)
 		}
 	};
 
@@ -71,9 +75,18 @@ export default function AgregarGasto() {
 				}
 			} catch (error) {
 				toast.error(error.message);
+				validarSesion(error)
 			}
 		}
 	};
+
+	const validarSesion = (error) => {
+		if (error.response.status == 401){
+			dispatch(setLogin(false));
+			dispatch(setUserData({}));
+			nav("/")
+		}
+	}
 
 	const validarCampos = () => {
 		if(!concepto){
