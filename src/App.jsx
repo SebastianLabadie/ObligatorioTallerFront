@@ -1,7 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link,Navigate } from "react-router-dom";
 import Login from "./routes/Login";
 import Registro from "./routes/Registro";
 import Header from "./components/Header";
@@ -32,6 +32,10 @@ function App() {
 						<Route exact path="/ListadoMovimientos" element={<ListadoMovimientos/>} />
 						<Route exact path="/MontosTotales" element={<MontosTotales/>} />
 						<Route exact path="/Analisis" element={<Analisis/>} />
+						<Route
+							path="*"
+							element={<Navigate to="/" replace />}
+						/>
 					</Routes>
 				</Router>
 			</div>

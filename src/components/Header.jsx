@@ -52,7 +52,7 @@ export default function Header() {
 							<li className="mr-3">
 								<Link
 									className={
-										location.pathname == "/"
+										location.pathname == "/" 
 											? "inline-block py-2 px-4 text-white no-underline"
 											: "inline-block py-2 px-4 text-gray-600 no-underline hover:text-gray-200 hover:text-underline"
 									}
